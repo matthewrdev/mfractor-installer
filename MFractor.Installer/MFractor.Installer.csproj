@@ -33,6 +33,7 @@
     <Compile Include="Properties\AddinInfo.cs" />
     <Compile Include="InstallationHandler.cs" />
     <Compile Include="InstallSuccessDialog.cs" />
+    <Compile Include="InstallationHelper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MonoDevelop.Addins.0.2.3\build\net40\MonoDevelop.Addins.targets" Condition="Exists('..\packages\MonoDevelop.Addins.0.2.3\build\net40\MonoDevelop.Addins.targets')" />
@@ -54,5 +55,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Properties\Manifest.addin.xml" />
     <EmbeddedResource Include="Assets\logo_medium.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
 </Project>
