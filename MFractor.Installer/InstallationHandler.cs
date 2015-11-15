@@ -128,6 +128,11 @@ namespace MFractor.Installer
 
 					addinDownloadUrl = url + "/" + addinFile;
 					addinFilePath = Path.Combine(downloadFolder, addinFile);
+
+					var fi = new FileInfo(addinFilePath);
+					if (!Directory.Exists(fi.DirectoryName)) {
+						Directory.CreateDirectory(fi.DirectoryName);
+					}
 				} catch {
 					
 				}
@@ -140,8 +145,9 @@ namespace MFractor.Installer
 
 				DispatchService.GuiDispatch( () => {d.WriteText("Downloading " + addinDownloadUrl + "...\n");});
 
+				webClient = new WebClient();
 				webClient.DownloadProgressChanged += (object sender, DownloadProgressChangedEventArgs e) => {
-					DispatchService.GuiDispatch( () => {d.Message = "  " + e.TotalBytesToReceive + " bytes remaining...\n";});
+					DispatchService.GuiDispatch( () => { d.WriteText( "  " + e.TotalBytesToReceive + " bytes remaining...\n");});
 				};
 				webClient.DownloadFile(addinDownloadUrl, addinFilePath);
 
