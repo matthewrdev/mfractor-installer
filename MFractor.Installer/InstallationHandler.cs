@@ -22,7 +22,7 @@ namespace MFractor.Installer
 		const string hasRanFile = ".has_ran";
 		const string primaryAddinUrl = "http://addins.mfractor.com";
 		const string roslynAddinUrl = "http://addins.mfractor.com/roslyn";
-		readonly string[] addinUrls = new [] { "http://addins.mfractor.com/main.mrep", "http://addins.mfractor.com/", "http://addins.mfractor.com", "http://addins.mfractor.com/root.mrep" } ;
+		const string installationUrl = "http://addins.mfractor.com/releases/latest/MFractor.mpack";
 
 		protected override void Run ()
 		{
@@ -58,6 +58,8 @@ namespace MFractor.Installer
 				}
 			}
 		}
+
+		readonly string[] addinUrls = new [] { "http://addins.mfractor.com/main.mrep", "http://addins.mfractor.com/", "http://addins.mfractor.com", "http://addins.mfractor.com/root.mrep" } ;
 
 		bool CheckIfUrlRegistered ()
 		{
