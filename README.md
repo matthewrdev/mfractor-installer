@@ -1,7 +1,5 @@
 # MFractor.Installer
 
-**Support for the Installer Addin is now deprecated (23 Jan 2016).**
-
 Registers the MFractor update URL into the Addin Manager and installs the latest version.
 
 Keep up to date with the latest features by following me on Twitter, [@matthewrdev](https://twitter.com/matthewrdev)
