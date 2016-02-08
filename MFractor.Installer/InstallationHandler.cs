@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Collections.Specialized;
 using System.Threading;
 using System.Xml.Linq;
+using System.Diagnostics;
 
 namespace MFractor.Installer
 {
@@ -93,17 +94,18 @@ namespace MFractor.Installer
 
 		public void InstallAddin(string url)
 		{
-			ProgressDialog d = new ProgressDialog (IdeApp.Workbench.RootWindow, false, true);
+			ProgressDialog d = new ProgressDialog (IdeApp.Workbench.RootWindow, true, true);
 
 			var setupService = InstallationHelper.GetSetupServiceInstance ();
 
+			CancellationToken token = new CancellationToken ();
+
 			d.Show ();
 			d.Message = "Installing MFractor";
-
 			Task.Run (() => {
 
 
-				DispatchService.GuiDispatch( () => { d.BeginTask ("Downloading addin..."); });
+				DispatchService.GuiDispatch( () => { d.BeginTask ("Downloading MFractor For Xamarin Studio..."); });
 
 				string downloadUrl = url + @"/root.mrep";
 				string downloadFolder = Path.Combine(InstallationHelper.DirectoryForAssembly(Assembly.GetExecutingAssembly()), ".temp");
@@ -149,22 +151,61 @@ namespace MFractor.Installer
 
 				webClient = new WebClient();
 				webClient.DownloadProgressChanged += (object sender, DownloadProgressChangedEventArgs e) => {
-					DispatchService.GuiDispatch( () => { d.WriteText( "  " + e.TotalBytesToReceive + " bytes remaining...\n");});
+					DispatchService.GuiDispatch( () => { 
+						d.Progress = (double)e.ProgressPercentage / 100.0;;
+					});
 				};
-				webClient.DownloadFile(addinDownloadUrl, addinFilePath);
+				webClient.DownloadFileCompleted += (object sender, System.ComponentModel.AsyncCompletedEventArgs e) => {
+					if (e.Cancelled) {
+						DispatchService.GuiDispatch( () => {
+							d.Message = "The download was cancelled.";
+						});
 
-				DispatchService.GuiDispatch( () => { d.EndTask(); });
+						return;
+					} 
 
-				DispatchService.GuiDispatch( () => {
-					d.BeginTask("Installing addin...");
+					if (e.Error != null) {
+						DispatchService.GuiDispatch( () => {
+							d.Message = "An error occurred while trying to download. Please file a bug report at https://github.com/matthewrdev/mfractor-installer";
+							d.WriteText("Error:\n" + e.Error.ToString());
+						});
 
+						return;
+					}
 
-					var monitor = new InstallMonitor (d);
+					DispatchService.GuiDispatch( () => { d.EndTask(); });
 
-					InstallationHelper.InstallAddin(setupService, monitor, addinFilePath);
-					d.Hide();
-				});
+					DispatchService.GuiDispatch( () => {
+						d.BeginTask("Installing MFractor For Xamarin Studio");
 
+						var monitor = new InstallMonitor (d);
+
+						string dataPath = "";
+						if (Platform.IsWindows) {
+							dataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "mfractor");
+						} else {
+							dataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "Library", "mfractor");
+						}
+
+						bool requiresDialog = File.Exists(Path.Combine(dataPath, ".first_run"));
+
+						InstallationHelper.InstallAddin(setupService, monitor, addinFilePath);
+						d.Hide();
+
+						if (!requiresDialog) {
+							var window = new InstallSuccessDialog(IdeApp.Workbench.RootWindow);
+							window.Show();
+						} else {
+							Process.Start("http://www.mfractor.com/");
+						}
+					});
+				};
+
+				d.OperationCancelled += (object sender, EventArgs e) => {
+					webClient.CancelAsync();
+				};
+
+				webClient.DownloadFileAsync(new Uri(addinDownloadUrl), addinFilePath);
 			});
 		}
 	}
@@ -208,7 +249,7 @@ namespace MFractor.Installer
 		public void Log (string msg)
 		{
 			DispatchService.GuiDispatch (() => {
-				_dialog.WriteText (msg + "\n");
+				_dialog.WriteText (msg);
 			});
 		}
 

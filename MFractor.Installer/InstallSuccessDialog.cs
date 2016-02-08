@@ -1,5 +1,6 @@
 ﻿using System;
 using Gtk;
+using System.Diagnostics;
 
 namespace MFractor.Installer
 {
@@ -9,7 +10,7 @@ namespace MFractor.Installer
 		Label installSuccess;
 
 
-		Label pleaseOpen;
+		Label productInformation;
 
 		Image image;
 		Button getStartedButton;
@@ -20,7 +21,7 @@ namespace MFractor.Installer
 			: base("Welcome to MFractor")
 		{
 			const int windowWidth = 600;
-			const int windowHeight = 420;
+			const int windowHeight = 480;
 
 			this.WindowPosition = WindowPosition.CenterAlways;
 			this.SetSizeRequest (windowWidth, windowHeight);
@@ -32,23 +33,22 @@ namespace MFractor.Installer
 			image.SetSizeRequest (250, 297);
 			vBox.Add (image);
 
-			hiThere = new Label ("Hi there!");
-			hiThere.Layout.Alignment = Pango.Alignment.Center;
-			installSuccess = new Label ("The url to install and update MFractor has been added to the Addin Manager.");
+			installSuccess = new Label ("MFractor For Xamarin Studio has been installed successfully!");
 			installSuccess.Layout.Alignment = Pango.Alignment.Center;
-			pleaseOpen = new Label ("Please open the Addin Gallery and install MFractor to get started.");
-			pleaseOpen.Layout.Alignment = Pango.Alignment.Center;
+			productInformation = new Label ("MFractor is a suite of productivity tools for Xamarin Studio to supercharge Android app development. \nFeatures:\n - Resource static analysis and auto-magic issue fixing.\n - Type-system driven auto-completion for most xml resources.\n - Enhanced navigation for Android Resources with go-to declaration, tooltips and search bar integration.\n - Resource refactoring.\n - And much, much more!");
+			productInformation.Layout.Alignment = Pango.Alignment.Center;
+			productInformation.Wrap = true;
 
 			getStartedButton = new Button ();
-			getStartedButton.Label = "Ok!";
+			getStartedButton.Label = "Let's get started";
 			getStartedButton.Clicked += (object sender, EventArgs e) => {
+				Process.Start("http://www.mfractor.com/");
 				this.Hide();
 			};
 
-			vBox.Add (image);
 			vBox.Add (hiThere);
 			vBox.Add (installSuccess);
-			vBox.Add (pleaseOpen);
+			vBox.Add (productInformation);
 			vBox.Add (getStartedButton);
 
 			Add (vBox);
