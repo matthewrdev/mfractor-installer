@@ -1,17 +1,25 @@
+
+![MFractor Logo](/images/logo-horizontal.png?raw=true)
+
 # MFractor.Installer
 
 Registers the MFractor update URL into the Addin Manager and installs the latest version.
 
 Keep up to date with the latest features by following me on Twitter, [@matthewrdev](https://twitter.com/matthewrdev)
 
-MFractor is a suite of productivity tools for Xamarin.Android to supercharge Android app development.
+MFractor, power tools for Xamarin Studio that'll knock your socks off!
 
-Features:
- - Resource static analysis and auto-magic issue fixing.
- - Type-system driven auto-completion for most xml resources.
- - Enhanced navigation with superior go-to declaration and tooltips and search bar integration.
- - Resource refactoring.
- - And much, much more!
+MFractor enchances Android developement with:
+ - Resource auto-completion.
+ - Resource type-safety.
+ - In-editor documentation.
+ - Resource Static Analysis.
+ - Issue fixing.
+ - Go-to declaration support.
+ - Better tooltips.
+ - Integrated search.
+ - Refactoring operations.
+ - Full Android SDK Support.
 
 Code smarter, code faster by [downloading MFractor](http://addins.mfractor.com/releases/latest/MFractor.mpack) and [installing it today](http://mfractorsoftware.wistia.com/medias/ytcnbyili9?embedType=iframe&videoWidth=640).
 
