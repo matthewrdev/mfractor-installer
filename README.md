@@ -9,7 +9,7 @@ Keep up to date with the latest features by following me on Twitter, [@matthewrd
 
 MFractor, power tools for Xamarin Studio that'll knock your socks off!
 
-MFractor enchances Android developement with:
+MFractor enhances Android developement with:
  - Resource auto-completion.
  - Resource type-safety.
  - In-editor documentation.
