@@ -1,9 +1,11 @@
+MFractor.Installer
+------
 
 MFractor is the essential productivity tool for Xamarin Studio.
 
-**The MFractor.Installer is now deprecated.**
+**The MFractor.Installer addin is now deprecated.**
 
-Please install MFractor by [downloading it](http://addins.mfractor.com/releases/latest/MFractor.mpack) and [installing it ](http://mfractorsoftware.wistia.com/medias/ytcnbyili9?embedType=iframe&videoWidth=640).
+To continue use, add http://addins.mfractor.com into the Addin Manager and install MFractor
 
 ![MFractor Logo](/images/logo-horizontal.png?raw=true)
 
