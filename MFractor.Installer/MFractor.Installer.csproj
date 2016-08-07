@@ -36,15 +36,15 @@
     <Compile Include="InstallationHelper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="..\packages\MonoDevelop.Addins.0.2.3\build\net40\MonoDevelop.Addins.targets" Condition="Exists('..\packages\MonoDevelop.Addins.0.2.3\build\net40\MonoDevelop.Addins.targets')" />
+  <Import Project="packages\MonoDevelop.Addins.0.3.4\build\net40\MonoDevelop.Addins.targets" Condition="Exists('packages\MonoDevelop.Addins.0.3.4\build\net40\MonoDevelop.Addins.targets')" />
   <ItemGroup>
-    <None Include="packages.config" />
     <None Include="..\addin-project.xml">
       <Link>addin-project.xml</Link>
     </None>
     <None Include="..\README.md">
       <Link>README.md</Link>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <AddinReference Include="MonoDevelop.Refactoring" />

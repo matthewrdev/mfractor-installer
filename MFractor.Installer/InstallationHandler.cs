@@ -30,29 +30,19 @@ namespace MFractor.Installer
 			var version = IdeApp.Version;
 
 			bool urlRegistered = CheckIfUrlRegistered ();
-			bool isInstalled = CheckIfInstalled ();
 
 			if (version.Major == 6) {
-
-				// Check the installed url, update to 
-
-				//InstallRolsynUrl ();
-				//InstallRoslynAddin ();
-			} else if (version.Major == 5 && version.Minor >= 10)
-			{
-				if (!urlRegistered) 
-				{
+				if (!urlRegistered) {
 					InstallUrl ();
 				}
 
-				if (!isInstalled)
-				{
+				if (!CheckIfInstalled ()) {
 					InstallAddin (primaryAddinUrl);
 				}
 			} else {
-				if (urlRegistered == false) {
+				if (!urlRegistered) {
 					// Unsupported version.
-					MessageDialog message = new MessageDialog(IdeApp.Workbench.RootWindow, DialogFlags.Modal, MessageType.Warning, ButtonsType.Ok, "MFractor is only supported in versions 5.10 and higher for " + BrandingService.ApplicationName);
+					MessageDialog message = new MessageDialog(IdeApp.Workbench.RootWindow, DialogFlags.Modal, MessageType.Warning, ButtonsType.Ok, "MFractor is only supported in versions 6.0 and higher for " + BrandingService.ApplicationName);
 					message.Show ();
 
 					InstallUrl();
@@ -62,150 +52,134 @@ namespace MFractor.Installer
 
 		readonly string[] addinUrls = new [] { "http://addins.mfractor.com/main.mrep", "http://addins.mfractor.com/", "http://addins.mfractor.com", "http://addins.mfractor.com/root.mrep" } ;
 
-		bool CheckIfUrlRegistered ()
-		{
-			var addinService = InstallationHelper.GetSetupServiceInstance ();
 
-			return InstallationHelper.ContainsRepository (addinService, addinUrls);
+		public bool CheckIfUrlRegistered ()
+		{
+			var repos = Runtime.AddinSetupService.Repositories.GetRepositories ();
+
+			foreach (var r in repos) {
+				if (r.Url.Contains ("http://addins.mfractor.com")) {
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		public void InstallUrl ()
+		{
+			Runtime.AddinSetupService.Repositories.RegisterRepository (null, "http://addins.mfractor.com/");
 		}
 
 		bool CheckIfInstalled ()
 		{
-			var addinService = InstallationHelper.GetSetupServiceInstance ();
-
 			return AddinManager.Registry.GetAddin ("MFractor") != null;
 		}
 
-		public void InstallUrl()
-		{
-			var addinService = InstallationHelper.GetSetupServiceInstance ();
-
-			var hasUrl = InstallationHelper.ContainsRepository (addinService, addinUrls);
-
-			if (!hasUrl) {
-
-				InstallationHelper.RegisterRepository (addinService, primaryAddinUrl);
-			}
-
-
-			// Attempt to install mfractor.
-		}
-
-
 		public void InstallAddin(string url)
 		{
-			ProgressDialog d = new ProgressDialog (IdeApp.Workbench.RootWindow, true, true);
-
-			var setupService = InstallationHelper.GetSetupServiceInstance ();
-
-			CancellationToken token = new CancellationToken ();
+			ProgressDialog d = new ProgressDialog (IdeApp.Workbench.RootWindow, false, true);
 
 			d.Show ();
 			d.Message = "Installing MFractor";
 			Task.Run (() => {
-
-
-				DispatchService.GuiDispatch( () => { d.BeginTask ("Downloading MFractor For Xamarin Studio..."); });
+				
+				Runtime.RunInMainThread (() => { d.BeginTask ("Downloading MFractor For Xamarin Studio..."); });
 
 				string downloadUrl = url + @"/root.mrep";
-				string downloadFolder = Path.Combine(InstallationHelper.DirectoryForAssembly(Assembly.GetExecutingAssembly()), ".temp");
+				string downloadFolder = Path.Combine (InstallationHelper.DirectoryForAssembly (Assembly.GetExecutingAssembly ()), ".temp");
 				string mrepFilePath = Path.Combine (downloadFolder, "root.mrep");
 
-				if (Directory.Exists(downloadFolder)) {
-					Directory.Delete(downloadFolder, true);
+				if (Directory.Exists (downloadFolder)) {
+					Directory.Delete (downloadFolder, true);
 				}
 
 				Directory.CreateDirectory (downloadFolder);
 
-				DispatchService.GuiDispatch( () => {d.WriteText("Locating MFractor addin package...\n");});
+				Runtime.RunInMainThread (() => { d.WriteText ("Locating MFractor addin package...\n"); });
 
-				var webClient = new WebClient();
+				var webClient = new WebClient ();
 
-				webClient.DownloadFile(downloadUrl, mrepFilePath);
+				webClient.DownloadFile (downloadUrl, mrepFilePath);
 
 				string addinDownloadUrl = "";
 				string addinFilePath = "";
 
 				try {
-					var xdoc = XDocument.Load(mrepFilePath);
-					string addinFile = xdoc.Root.Element("Addin").Element("Url").Value;
+					var xdoc = XDocument.Load (mrepFilePath);
+					string addinFile = xdoc.Root.Element ("Addin").Element ("Url").Value;
 
 					addinDownloadUrl = url + "/" + addinFile;
-					addinFilePath = Path.Combine(downloadFolder, addinFile);
+					addinFilePath = Path.Combine (downloadFolder, addinFile);
 
-					var fi = new FileInfo(addinFilePath);
-					if (!Directory.Exists(fi.DirectoryName)) {
-						Directory.CreateDirectory(fi.DirectoryName);
+					var fi = new FileInfo (addinFilePath);
+					if (!Directory.Exists (fi.DirectoryName)) {
+						Directory.CreateDirectory (fi.DirectoryName);
 					}
 				} catch {
-					
+
 				}
 
-				if (String.IsNullOrEmpty(addinDownloadUrl)) {
-					DispatchService.GuiDispatch( () => { d.EndTask(); });
-					DispatchService.GuiDispatch( () => { d.Message = "Installation failed. Please try again through the addin manager\n"; });
+				if (String.IsNullOrEmpty (addinDownloadUrl)) {
+					Runtime.RunInMainThread (() => { d.EndTask (); });
+					Runtime.RunInMainThread (() => { d.Message = "Installation failed. Please try again through the addin manager\n"; });
 					return;
 				}
 
-				DispatchService.GuiDispatch( () => {d.WriteText("Downloading " + addinDownloadUrl + "...\n");});
+				Runtime.RunInMainThread (() => { d.WriteText ("Downloading " + addinDownloadUrl + "...\n"); });
 
-				webClient = new WebClient();
+				webClient = new WebClient ();
 				webClient.DownloadProgressChanged += (object sender, DownloadProgressChangedEventArgs e) => {
-					DispatchService.GuiDispatch( () => { 
-						d.Progress = (double)e.ProgressPercentage / 100.0;;
+					Runtime.RunInMainThread (() => {
+						d.Progress = (double)e.ProgressPercentage / 100.0; ;
 					});
 				};
+
 				webClient.DownloadFileCompleted += (object sender, System.ComponentModel.AsyncCompletedEventArgs e) => {
 					if (e.Cancelled) {
-						DispatchService.GuiDispatch( () => {
+						Runtime.RunInMainThread (() => {
 							d.Message = "The download was cancelled.";
 						});
 
 						return;
-					} 
+					}
 
 					if (e.Error != null) {
-						DispatchService.GuiDispatch( () => {
+						Runtime.RunInMainThread (() => {
 							d.Message = "An error occurred while trying to download. Please file a bug report at https://github.com/matthewrdev/mfractor-installer";
-							d.WriteText("Error:\n" + e.Error.ToString());
+							d.WriteText ("Error:\n" + e.Error.ToString ());
 						});
 
 						return;
 					}
 
-					DispatchService.GuiDispatch( () => { d.EndTask(); });
+					Runtime.RunInMainThread (() => { d.EndTask (); });
 
-					DispatchService.GuiDispatch( () => {
-						d.BeginTask("Installing MFractor For Xamarin Studio");
+					Runtime.RunInMainThread (() => {
+						d.BeginTask ("Installing MFractor For Xamarin Studio");
 
 						var monitor = new InstallMonitor (d);
 
 						string dataPath = "";
 						if (Platform.IsWindows) {
-							dataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "mfractor");
+							dataPath = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.ApplicationData), "mfractor");
 						} else {
-							dataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), "Library", "mfractor");
+							dataPath = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.Personal), "Library", "mfractor");
 						}
 
-						bool requiresDialog = File.Exists(Path.Combine(dataPath, ".first_run"));
+						bool requiresDialog = File.Exists (Path.Combine (dataPath, ".first_run"));
 
-						InstallationHelper.InstallAddin(setupService, monitor, addinFilePath);
-						d.Hide();
+						Task.Run (() => {
+							Runtime.AddinSetupService.Install (monitor, addinFilePath);
 
-						if (!requiresDialog) {
-							var window = new InstallSuccessDialog(IdeApp.Workbench.RootWindow);
-							window.Show();
-						} else {
-							Process.Start("http://www.mfractor.com/");
-						}
+							Runtime.RunInMainThread (() => {
+								d.Hide ();
+							});
+						});
 					});
 				};
 
-				d.OperationCancelled += (object sender, EventArgs e) => {
-					webClient.CancelAsync();
-				};
-
-				webClient.DownloadFileAsync(new Uri(addinDownloadUrl), addinFilePath);
+				webClient.DownloadFileAsync (new Uri (addinDownloadUrl), addinFilePath);
 			});
 		}
 	}
@@ -240,7 +214,7 @@ namespace MFractor.Installer
 
 		public void SetProgress (double progress)
 		{
-			DispatchService.GuiDispatch (() => {
+			Runtime.RunInMainThread (() => {
 				_dialog.Progress = progress;
 			});
 			RunPendingEvents ();
@@ -248,14 +222,14 @@ namespace MFractor.Installer
 
 		public void Log (string msg)
 		{
-			DispatchService.GuiDispatch (() => {
+			Runtime.RunInMainThread (() => {
 				_dialog.WriteText (msg);
 			});
 		}
 
 		public void ReportWarning (string message)
 		{
-			DispatchService.GuiDispatch (() => {
+			Runtime.RunInMainThread (() => {
 				_dialog.WriteText (message + "\n");
 			});
 			warnings.Add (message);
@@ -263,7 +237,7 @@ namespace MFractor.Installer
 
 		public void ReportError (string message, Exception exception)
 		{
-			DispatchService.GuiDispatch (() => {
+			Runtime.RunInMainThread (() => {
 				_dialog.WriteText (message + "\n");
 				_dialog.WriteText (exception.Message + "\n");
 			});
