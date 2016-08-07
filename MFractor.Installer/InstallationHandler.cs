@@ -76,6 +76,14 @@ namespace MFractor.Installer
 			return AddinManager.Registry.GetAddin ("MFractor") != null;
 		}
 
+		public static string DirectoryForAssembly (Assembly assembly)
+		{
+			string codeBase = assembly.CodeBase;
+			UriBuilder uri = new UriBuilder (codeBase);
+			string path = Uri.UnescapeDataString (uri.Path);
+			return Path.GetDirectoryName (path);
+		}
+
 		public void InstallAddin(string url)
 		{
 			ProgressDialog d = new ProgressDialog (IdeApp.Workbench.RootWindow, false, true);
@@ -87,7 +95,7 @@ namespace MFractor.Installer
 				Runtime.RunInMainThread (() => { d.BeginTask ("Downloading MFractor For Xamarin Studio..."); });
 
 				string downloadUrl = url + @"/root.mrep";
-				string downloadFolder = Path.Combine (InstallationHelper.DirectoryForAssembly (Assembly.GetExecutingAssembly ()), ".temp");
+				string downloadFolder = Path.Combine (DirectoryForAssembly (Assembly.GetExecutingAssembly ()), ".temp");
 				string mrepFilePath = Path.Combine (downloadFolder, "root.mrep");
 
 				if (Directory.Exists (downloadFolder)) {
