@@ -5,7 +5,7 @@ using Mono.Addins.Description;
 [assembly:Addin (
 	"MFractor.Installer", 
 	Namespace = "MFractor.Installer",
-	Version = "2.0.5"
+	Version = "2.0.6"
 )]
 
 [assembly:AddinName ("MFractor.Installer")]

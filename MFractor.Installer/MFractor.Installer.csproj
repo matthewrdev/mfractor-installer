@@ -34,7 +34,7 @@
     <Compile Include="InstallationHandler.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-  <Import Project="packages\MonoDevelop.Addins.0.3.4\build\net40\MonoDevelop.Addins.targets" Condition="Exists('packages\MonoDevelop.Addins.0.3.4\build\net40\MonoDevelop.Addins.targets')" />
+  <Import Project="packages\MonoDevelop.Addins.0.3.4\build\net40\MonoDevelop.Addins.targets" />
   <ItemGroup>
     <None Include="..\addin-project.xml">
       <Link>addin-project.xml</Link>
