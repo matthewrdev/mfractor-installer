@@ -13,6 +13,8 @@ As the essential productivity tool for Xamarin Studio, MFractor adds:
  - Static analysis for Android Resources
  - Streamlined Android resource navigation.
  - C# code analysis for mobile apps.
+
+Learn more about MFractor at [www.mfractor.com](http://www.mfractor.com).
  
 **The Xaml analyser detects issues and offers a quick fix for most issues:**
 ![Xaml Code Issue Fix](/images/xaml-csharp-codegen.gif)
