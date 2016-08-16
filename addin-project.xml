@@ -1,5 +1,5 @@
 ﻿<AddinProject appVersion="6.0">
-    <Project platforms="Win32 Mac">
+    <Project platforms="Mac Win32">
         <AddinFile>MFractor.Installer/bin/Release/MFractor.Installer.dll</AddinFile>
         <BuildFile>MFractor.Installer.sln</BuildFile>
         <BuildConfiguration>Release</BuildConfiguration>

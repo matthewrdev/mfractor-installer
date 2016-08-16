@@ -1,28 +1,23 @@
 ﻿using System;
-using MonoDevelop.Components.Commands;
-using MonoDevelop.Projects;
-using System.Linq;
-using MonoDevelop.Ide;
-using MonoDevelop.Ide.Gui.Dialogs;
-using System.Reflection;
-using Gtk;
-using Mono.Addins;
-using MonoDevelop.Core;
+using System.Collections.Specialized;
 using System.IO;
 using System.Net;
-using System.Threading.Tasks;
-using System.Collections.Specialized;
+using System.Reflection;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Xml.Linq;
-using System.Diagnostics;
+using Gtk;
+using Mono.Addins;
+using MonoDevelop.Components.Commands;
+using MonoDevelop.Core;
+using MonoDevelop.Ide;
+using MonoDevelop.Ide.Gui.Dialogs;
 
 namespace MFractor.Installer
 {
 	public class InstallationHandler : CommandHandler
 	{
-		const string hasRanFile = ".has_ran";
-		const string primaryAddinUrl = "http://addins.mfractor.com";
-		const string installationUrl = "http://addins.mfractor.com/releases/latest/MFractor.mpack";
+		const string AddinUrl = "http://addins.mfractor.com";
 
 		protected override void Run ()
 		{
@@ -36,28 +31,26 @@ namespace MFractor.Installer
 				}
 
 				if (!CheckIfInstalled ()) {
-					InstallAddin (primaryAddinUrl);
+					InstallAddin (AddinUrl);
 				}
 			} else {
 				if (!urlRegistered) {
-					// Unsupported version.
-					MessageDialog message = new MessageDialog(IdeApp.Workbench.RootWindow, DialogFlags.Modal, MessageType.Warning, ButtonsType.Ok, "MFractor is only supported in versions 6.0 and higher for " + BrandingService.ApplicationName);
-					message.Show ();
+
+					string message = "MFractor is only supported in versions 6.0 and higher for " + BrandingService.ApplicationName;
+					MessageDialog dialog = new MessageDialog(IdeApp.Workbench.RootWindow, DialogFlags.Modal, MessageType.Warning, ButtonsType.Ok, message);
+					dialog.Show ();
 
 					InstallUrl();
 				}
 			}
 		}
 
-		readonly string[] addinUrls = new [] { "http://addins.mfractor.com/main.mrep", "http://addins.mfractor.com/", "http://addins.mfractor.com", "http://addins.mfractor.com/root.mrep" } ;
-
-
 		public bool CheckIfUrlRegistered ()
 		{
 			var repos = Runtime.AddinSetupService.Repositories.GetRepositories ();
 
 			foreach (var r in repos) {
-				if (r.Url.Contains ("http://addins.mfractor.com")) {
+				if (r.Url.Contains (AddinUrl)) {
 					return true;
 				}
 			}
@@ -88,6 +81,7 @@ namespace MFractor.Installer
 			ProgressDialog d = new ProgressDialog (IdeApp.Workbench.RootWindow, false, true);
 
 			d.Show ();
+			d.Title = "Installing MFractor - The Essential Producitivity Tool for Xamarin Studio";
 			d.Message = "Installing MFractor";
 			Task.Run (() => {
 				
@@ -191,7 +185,7 @@ namespace MFractor.Installer
 		}
 	}
 
-	public class InstallMonitor: IProgressStatus, IDisposable
+	public class InstallMonitor : IProgressStatus, IDisposable
 	{
 		StringCollection errors = new StringCollection ();
 		StringCollection warnings = new StringCollection ();
