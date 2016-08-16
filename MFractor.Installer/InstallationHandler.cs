@@ -22,7 +22,6 @@ namespace MFractor.Installer
 	{
 		const string hasRanFile = ".has_ran";
 		const string primaryAddinUrl = "http://addins.mfractor.com";
-		const string roslynAddinUrl = "http://addins.mfractor.com/roslyn";
 		const string installationUrl = "http://addins.mfractor.com/releases/latest/MFractor.mpack";
 
 		protected override void Run ()

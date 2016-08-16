@@ -47,10 +47,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <AddinReference Include="MonoDevelop.Refactoring" />
-    <AddinReference Include="MonoDevelop.CSharpBinding" />
     <AddinReference Include="MonoDevelop.GtkCore" />
-    <AddinReference Include="MonoDevelop.SourceEditor2" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Manifest.addin.xml" />
