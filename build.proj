@@ -37,20 +37,15 @@
   </Target>
 
   <Target Name="Clean">
-    <Exec Command="echo %cd%" Condition="'$(OS)' != 'Unix'" />
-
-    <Exec Command="dir" Condition="'$(OS)' != 'Unix'" />
-    <Exec Command="ls" Condition="'$(OS)' == 'Unix'" />
-
-    <Exec Command="dir" Condition="'$(OS)' != 'Unix'" />
-    <Exec Command="pwd" Condition="'$(OS)' == 'Unix'" />
-
 
     <Exec Command="echo &quot;Window&quot;" Condition="'$(OS)' != 'Unix'" />
     <Exec Command="echo &quot;Unix&quot;" Condition="'$(OS)' == 'Unix'" />
 
-    <MSBuild Targets="Clean"
-             Projects="@(Solution)" />
+    <Exec Command="echo $OSTYPE" Condition="'$(OS)' == 'Unix'" />
+
+    <Exec Command="rm -rf ./src/MFractor/bin" Condition="'$(OS)' == 'Unix'" />
+    <Exec Command="rm -rf ./src/MFractor/obj" Condition="'$(OS)' == 'Unix'" />
+    <Exec Command="rm -rf ./src/packages" Condition="'$(OS)' == 'Unix'" />
   </Target>
 
   <Target Name="Build" DependsOnTargets="RestorePackages">
