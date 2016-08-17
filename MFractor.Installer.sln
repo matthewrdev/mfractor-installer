@@ -1,7 +1,7 @@
 
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MFractor.Installer", "MFractor.Installer.csproj", "{33A7544D-574F-44E4-B5DA-4ABED9B982B8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MFractor.Installer", "MFractor.Installer/MFractor.Installer.csproj", "{33A7544D-574F-44E4-B5DA-4ABED9B982B8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
