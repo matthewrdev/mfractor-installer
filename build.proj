@@ -29,7 +29,7 @@
     <!-- Windows Restore -->
     <Exec Command="&quot;$(ToolsHome)NuGet\NuGet.exe&quot; restore &quot;%(Solution.Identity)&quot;" Condition="'$(OS)' != 'Unix'"/>
     <!-- OSX Restore -->
-    <Exec Command="mono &quot;$(ToolsHome)NuGet/NuGet.exe&quot; restore &quot;%(Solution.Identity)&quot;" Condition="'$(OS)' == 'Unix'"/>
+    <Exec Command="mono &quot;$(ToolsHome)NuGet/NuGet.exe&quot; restore &quot;%(Solution.Identity)&quot;"/>
   </Target>
 
   <Target Name="Clean">
