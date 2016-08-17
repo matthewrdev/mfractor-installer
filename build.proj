@@ -28,6 +28,8 @@
 
 
   <Target Name="RestorePackages">
+
+
     <!-- Windows Restore -->
     <Exec Command="&quot;$(ToolsHome)NuGet\NuGet.exe&quot; restore &quot;%(Solution.Identity)&quot;" Condition="'$(OS)' != 'Unix'"/>
     <!-- OSX Restore -->
@@ -35,9 +37,18 @@
   </Target>
 
   <Target Name="Clean">
+    <Exec Command="echo %cd%" Condition="'$(OS)' != 'Unix'" />
+
     <Exec Command="dir" Condition="'$(OS)' != 'Unix'" />
     <Exec Command="ls" Condition="'$(OS)' == 'Unix'" />
-    
+
+    <Exec Command="dir" Condition="'$(OS)' != 'Unix'" />
+    <Exec Command="pwd" Condition="'$(OS)' == 'Unix'" />
+
+
+    <Exec Command="echo &quot;Window&quot;" Condition="'$(OS)' != 'Unix'" />
+    <Exec Command="echo &quot;Unix&quot;" Condition="'$(OS)' == 'Unix'" />
+
     <MSBuild Targets="Clean"
              Projects="@(Solution)" />
   </Target>
