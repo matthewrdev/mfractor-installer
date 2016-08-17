@@ -37,8 +37,8 @@
     <Exec Command="mkdir tools/NuGet" Condition="'$(OS)' == 'Unix'" />
 
     <Exec Command="ls" Condition="'$(OS)' == 'Unix'" />
-    
-    <Exec Command="unzip NuGet.zip" Condition="'$(OS)' == 'Unix'" />
+
+    <Exec Command="tar -xvzf NuGet.tar.gz" Condition="'$(OS)' == 'Unix'" />
     <Exec Command="cp NuGet tools/NuGet/NuGet.exe" Condition="'$(OS)' == 'Unix'" />
 
     <Exec Command="ls tools/NuGet" Condition="'$(OS)' == 'Unix'" />
