@@ -32,6 +32,7 @@
 
     <!-- Windows Restore -->
     <Exec Command="&quot;$(ToolsHome)NuGet\NuGet.exe&quot; restore &quot;%(Solution.Identity)&quot;" Condition="'$(OS)' != 'Unix'"/>
+
     <!-- OSX Restore -->
     <Exec Command="mono &quot;$(ToolsHome)NuGet/NuGet.exe&quot; restore &quot;%(Solution.Identity)&quot;"/>
   </Target>
@@ -43,8 +44,8 @@
 
     <Exec Command="echo $OSTYPE" Condition="'$(OS)' == 'Unix'" />
 
-    <Exec Command="rm -rf ./src/MFractor/bin" Condition="'$(OS)' == 'Unix'" />
-    <Exec Command="rm -rf ./src/MFractor/obj" Condition="'$(OS)' == 'Unix'" />
+    <Exec Command="rm -rf ./src/bin" Condition="'$(OS)' == 'Unix'" />
+    <Exec Command="rm -rf ./src/obj" Condition="'$(OS)' == 'Unix'" />
     <Exec Command="rm -rf ./src/packages" Condition="'$(OS)' == 'Unix'" />
   </Target>
 
