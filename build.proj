@@ -44,6 +44,8 @@
 
     <Exec Command="echo $OSTYPE" Condition="'$(OS)' == 'Unix'" />
 
+    <Exec Command="ls tools/NuGet" Condition="'$(OS)' == 'Unix'" />
+
     <Exec Command="rm -rf ./src/bin" Condition="'$(OS)' == 'Unix'" />
     <Exec Command="rm -rf ./src/obj" Condition="'$(OS)' == 'Unix'" />
     <Exec Command="rm -rf ./src/packages" Condition="'$(OS)' == 'Unix'" />
