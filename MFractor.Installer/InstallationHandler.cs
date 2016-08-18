@@ -65,7 +65,7 @@ namespace MFractor.Installer
 
 		bool CheckIfInstalled ()
 		{
-			return AddinManager.Registry.GetAddin ("MFractor") != null;
+			return AddinManager.Registry.GetAddins ().Where (a => a.Name.Contains ("MFractor")).FirstOrDefault () != null;
 		}
 
 		public static string DirectoryForAssembly (Assembly assembly)
